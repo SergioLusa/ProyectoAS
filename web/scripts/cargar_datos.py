@@ -1,4 +1,5 @@
 import os
+import time
 import pandas as pd
 import mysql.connector
 from kaggle.api.kaggle_api_extended import KaggleApi
@@ -26,6 +27,7 @@ else:
 # Cargar el CSV descargado a un DataFrame de Pandas
 df = pd.read_csv('/data/' + file_name, encoding='ISO-8859-1')  # O usa 'latin1'
 
+time.sleep(3)
 # Conectar con MariaDB (usando el contenedor de Docker)
 conn = mysql.connector.connect(
     host='db',  # Nombre del contenedor de MariaDB
