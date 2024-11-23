@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  db:
+    build:
+      context: ./db
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_USER: user
+      MYSQL_PASSWORD: userpassword
+      MYSQL_DATABASE: peliculas
+    image: db
+    ports:
+      - "3306:3306"
+
+  web:
+    build:
+      context: ./web
+    ports:
+      - "80:80"
+    volumes:
+      - ./web/html:/var/www/html
+      - ./web/scripts:/scripts
+    image: web
+    depends_on:
+      - db
+      - rabbitmq
+
+  rabbitmq:
+    build:
+      context: ./rabbitmq  # Apunta al directorio donde está el Dockerfile de RabbitMQ
+    ports:
+      - "5672:5672"
+      - "15672:15672"  # Acceso a la interfaz de administración
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest

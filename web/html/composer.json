@@ -1,0 +1,6 @@
+{
+  "require": {
+    "php-amqplib/rabbitmq-bundle": "^1.14"
+  }
+}
+
