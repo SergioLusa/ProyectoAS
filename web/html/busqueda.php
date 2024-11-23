@@ -219,6 +219,8 @@ $conn->close();
         
         <button onclick="location.href='index.php'">Volver al Inicio</button>
         <button onclick="location.href='peliculas.php'">Película Aleatoria</button>
+        <button onclick="location.href='forum.php'">Comentarios</button>
+        <button onclick="location.href='enviar_mensaje.php'">Escribir un comentario</button>
     </div>
 </body>
 </html>

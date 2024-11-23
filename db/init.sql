@@ -10,3 +10,8 @@ CREATE TABLE IF NOT EXISTS peliculas (
     score FLOAT,
     language VARCHAR(255)
 );
+
+CREATE TABLE IF NOT EXISTS comentario (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    message VARCHAR(255)
+);

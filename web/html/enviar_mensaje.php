@@ -143,6 +143,10 @@ try {
             <textarea name="message" placeholder="Escribe tu mensaje aquí..."></textarea><br>
             <button type="submit">Enviar</button>
         </form>
+        <button onclick="location.href='index.php'">Volver al Inicio</button>
+        <button onclick="location.href='peliculas.php'">Película Aleatoria</button>
+	<button onclick="location.href='busqueda.php'">Filtrado de películas</button>
+	<button onclick="location.href='forum.php'">Comentarios</button>
     </div>
 </body>
 </html>

@@ -41,7 +41,12 @@ else:
     print("Error: No se pudo conectar a la base de datos")
 
 cursor = conn.cursor()
-
+cursor.execute("""
+	CREATE TABLE IF NOT EXISTS comentario (
+	    id INT AUTO_INCREMENT PRIMARY KEY,
+	    message VARCHAR(255)
+	)
+""")
 # Crear la tabla 'peliculas' solo si no existe
 cursor.execute("""
     CREATE TABLE IF NOT EXISTS peliculas (
@@ -72,7 +77,6 @@ for index, row in df.iterrows():
                 VALUES (%s, %s, %s, %s, %s, %s)
             """, (row['Title'], row['Genre'], row['Premiere'], row['Runtime'], row['IMDB Score'], row['Language']))
     except mysql.connector.Error as err:
-        print(f"Error al insertar la película {row['Title']}: {err}")
         continue
 
 # Commit y cerrar conexión

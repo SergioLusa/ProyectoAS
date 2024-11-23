@@ -11,6 +11,7 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-install gd mysqli bcmath sockets \
     && apt-get clean
 
+RUN docker-php-ext-install pdo pdo_mysql
 # Instalar dependencias de Python necesarias (pandas, mysql-connector-python, kaggle)
 RUN pip3 install --no-cache-dir pandas mysql-connector-python kaggle
 

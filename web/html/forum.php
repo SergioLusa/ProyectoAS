@@ -10,9 +10,24 @@ $username = 'guest';
 $password = 'guest';
 $queue_name = 'forum_queue';
 
-$messages = []; // Almacenará los mensajes obtenidos
+// Configuración de la base de datos
+$dbHost = 'db'; // Nombre del contenedor de la base de datos en Docker
+$dbUser = 'root'; // Usuario de la base de datos
+$dbPass = 'rootpassword'; // Contraseña de la base de datos
+$dbName = 'peliculas'; // Nombre de la base de datos
+
+$messages = []; // Almacenará los mensajes obtenidos de RabbitMQ
+$dbMessages = []; // Almacenará los mensajes obtenidos de la base de datos
 
 try {
+    // Conectar a la base de datos
+    $pdo = new PDO("mysql:host=$dbHost;dbname=$dbName;charset=utf8", $dbUser, $dbPass);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+    // Obtener mensajes existentes de la base de datos
+    $stmt = $pdo->query("SELECT message FROM comentario");
+    $dbMessages = $stmt->fetchAll(PDO::FETCH_ASSOC); // Asegúrate de que usamos PDO::FETCH_ASSOC para obtener un array asociativo
+
     // Conectar con RabbitMQ
     $connection = new AMQPStreamConnection($hostname, $port, $username, $password);
     $channel = $connection->channel();
@@ -21,8 +36,13 @@ try {
     list($queue, $messageCount, $consumerCount) = $channel->queue_declare($queue_name, true);
 
     // Consumir los mensajes de la cola
-    $callback = function ($msg) use (&$messages) {
+    $callback = function ($msg) use (&$messages, $pdo) {
         $messages[] = $msg->body; // Añadir mensaje al array
+
+        // Insertar el mensaje en la base de datos
+        $stmt = $pdo->prepare("INSERT INTO comentario (message) VALUES (:message)");
+        $stmt->bindParam(':message', $msg->body, PDO::PARAM_STR);
+        $stmt->execute();
     };
 
     if ($messageCount > 0) {
@@ -43,6 +63,9 @@ try {
     // Cerrar conexiones
     $channel->close();
     $connection->close();
+} catch (\PDOException $e) {
+    error_log("Error de conexión a la base de datos: " . $e->getMessage());
+    echo "<p>Error al conectar con la base de datos. Inténtalo de nuevo más tarde.</p>";
 } catch (\Exception $e) {
     error_log("Error al conectar con RabbitMQ: " . $e->getMessage());
     echo "<p>Error al cargar los mensajes. Inténtalo de nuevo más tarde.</p>";
@@ -97,13 +120,16 @@ try {
 
         .message-box {
             margin-top: 20px;
+        }
+
+        .message-box p {
+            font-size: 18px;
+            margin-bottom: 15px;
+            background-color: #333;
             padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            background-color: #2a2a2a;
-            max-height: 300px;
-            overflow-y: auto;
-            color: #fff;
+            border-radius: 5px;
+            color: #e50914;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
         }
 
         button {
@@ -143,12 +169,25 @@ try {
         <h2>Mensajes del Foro</h2>
         <div class="message-box">
             <?php
-                // Mostrar los mensajes
+                // Mostrar los mensajes de la base de datos
+                if (!empty($dbMessages)) {
+                    echo "<h3>Mensajes desde la Base de Datos:</h3>";
+                    foreach ($dbMessages as $dbMessage) {
+                        // Mostrar los mensajes con estilo consistente
+                        echo "<p>" . htmlspecialchars($dbMessage['message']) . "</p>";
+                    }
+                }
+
+                // Mostrar los mensajes de RabbitMQ
                 if (!empty($messages)) {
+                    echo "<h3>Mensajes desde RabbitMQ:</h3>";
                     foreach ($messages as $message) {
                         echo "<p>" . htmlspecialchars($message) . "</p>";
                     }
-                } else {
+                }
+
+                // Si no hay mensajes en ambos casos
+                if (empty($dbMessages) && empty($messages)) {
                     echo "<p>No hay mensajes en el foro.</p>";
                 }
             ?>
@@ -158,7 +197,7 @@ try {
             <button onclick="location.href='index.php'">Inicio</button>
             <button onclick="location.href='peliculas.php'">Películas</button>
             <button onclick="location.href='busqueda.php'">Busqueda</button>
-            <button onclick="location.href='enviar_mensaje.php'">Escribir en el Foro</button>
+            <button onclick="location.href='enviar_mensaje.php'">Escribir un comentario</button>
         </div>
     </div>
     <footer>

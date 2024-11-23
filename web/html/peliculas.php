@@ -128,6 +128,8 @@ $conn->close();
 
         <a href="peliculas.php" class="btn">Generar otra película</a>
         <a href="busqueda.php" class="btn secondary">Filtrado de películas</a>
+        <a href="forum.php" class="btn secondary">Comentarios</a>
+        <a href="enviar_mensaje.php" class="btn secondary">Escribir un comentario</a>
         <a href="index.php" class="btn secondary">Volver al Inicio</a>
     </div>
 </body>

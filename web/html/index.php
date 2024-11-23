@@ -82,8 +82,8 @@
         <p>¿No sabes qué ver en Netflix? Nosotros te ayudamos. Haz clic en el botón de películas y descubre una opción aleatoria para disfrutar.</p>
         <button onclick="location.href='peliculas.php'">Película aleatoria</button>
         <button onclick="location.href='busqueda.php'">Filtrado de películas</button>
-        <button onclick="location.href='enviar_mensaje.php'">Escribir en el foro</button>
-        <button onclick="location.href='forum.php'">Foro</button>
+        <button onclick="location.href='enviar_mensaje.php'">Escribir un comentario</button>
+        <button onclick="location.href='forum.php'">Comentarios</button>
     </div>
 </body>
 </html>
