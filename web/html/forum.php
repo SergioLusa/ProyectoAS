@@ -56,8 +56,6 @@ try {
                 break;
             }
         }
-    } else {
-        echo "<p>No hay mensajes en la cola.</p>";
     }
 
     // Cerrar conexiones
