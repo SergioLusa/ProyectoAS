@@ -130,6 +130,20 @@ try {
         footer p {
             margin: 0;
         }
+
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .action-buttons button {
+            margin: 5px;
+        }
+
+        .form-buttons {
+            margin-top: 30px;
+        }
     </style>
 </head>
 <body>
@@ -143,11 +157,13 @@ try {
             <textarea name="message" placeholder="Escribe tu mensaje aquí..."></textarea><br>
             <button type="submit">Enviar</button>
         </form>
+    </div>
+
+    <div class="action-buttons">
         <button onclick="location.href='index.php'">Volver al Inicio</button>
         <button onclick="location.href='peliculas.php'">Película Aleatoria</button>
-	<button onclick="location.href='busqueda.php'">Filtrado de películas</button>
-	<button onclick="location.href='forum.php'">Comentarios</button>
+        <button onclick="location.href='busqueda.php'">Filtrado de películas</button>
+        <button onclick="location.href='forum.php'">Comentarios</button>
     </div>
 </body>
 </html>
-
